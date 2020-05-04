@@ -57,3 +57,94 @@ Projects need to be approved prior to launching into them, so take some time to 
 # in config/environment.rb add this line:
 ActiveRecord::Base.logger = nil
 ```
+
+
+* Github repo search
+* Search for github repos by key terms, save repos you like, view your saved repos, delete saved repos.
+* As a user, I want to search for repositorys using key search terms 
+* As a user, I want to save a repo
+* As a user, I want to view my saved repos 
+* As a user, I want to delete a repo
+* As a user, I want to update ????????????????
+
+* https://api.github.com/search/repositories?q=#{insert_search_term}
+
+* Database Structure
+  * Tables
+
+      users
+        username string
+        name string
+      
+      repos
+        name string
+        description string
+        url string
+        private boolean
+        owner_id integer
+        forks integer
+        stars integer
+
+      user_repos
+        user_id integer
+        repo_id integer
+
+* Models
+    User
+      instantiate with username and name, id=nil
+      #methods
+        save_repo(self.id, repo.id)
+            -UserRepo.save(self.id, repo.id)
+        display_repos
+            -UserRepo.get_user_repos(self.id)
+      .methods
+        find_user
+        create_user
+    
+    Repo
+
+      .methods
+        search(keyword)
+            -return response 
+        display_results
+            -display each repo 
+        save
+            -save repo 
+            -use temp array of searched repos 
+
+
+    UserRepo
+      .methods
+        all
+          -returns all user_repos
+          
+        save_repo(user_id, repo_id)
+          -user_id
+          -repo_id
+
+* Views
+    Command Line Interface
+
+    Ask user to login or create acct(login/create)
+      -If login
+        --Instantiate User class with data from users table
+      -If create
+        --Ask for username
+        --Ask for name
+        --Instantiate User.create with username and name
+    List of commands (What would you like to do?enter a number)
+      [1]-Search for repos
+        -Ask user for key term to use in search
+        -return a printed out list of repos matching the search terms
+        --To save a repo type "save"
+            ---ask user which repo [num] to save 
+            ---save and display message of success of failure
+            ---Go back to List of Commands
+      [2]-List of saved repos
+        --Print list of saved repos 
+        --Go back to List of Commands
+      [3]-Delete repo
+        --Ask user what repo [num] to delete
+        --get user input and pass to delete method
+        -- display message "repo deleted"
+        --Go back to List of Commands
