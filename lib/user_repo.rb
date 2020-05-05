@@ -1,5 +1,9 @@
 class UserRepo < ActiveRecord::Base
-# Connects a User with Repos
-# Saves the user_id and the repo_id in a new row
-# 
+
+    
+    def self.create(user, repo)
+        repo.save 
+        super(user_id: user_id, repo_id: repo.id)
+    end
+
 end

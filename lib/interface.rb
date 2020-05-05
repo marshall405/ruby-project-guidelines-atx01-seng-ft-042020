@@ -1,23 +1,18 @@
 class UserInterface 
     # Interacts with user via command line
     @@user = nil
-    def self.greeting
-        puts "*****************************************"
-        puts "*                                       *"
-        puts "* Welcome to the GitHub Repo Search CLI *"
-        puts "*                                       *"
-        puts "*****************************************"
+
+    extend Views
+    extend Commands 
+    def self.start
+        greeting
         login_or_create_account
+
     end
 
     def self.login_or_create_account
-        space
-        puts "*********************"
-        puts "*   [ 1 ] Login     *"
-        puts "*********************"    
-        puts "*   [ 2 ] Create    *"
-        puts "*********************"
-        puts "What would you like to do?[Enter number]"
+        login_or_create_view
+        puts "What would you like to do? [Enter number]"
         action = get_user_input
         if action == "1"
             login
@@ -102,10 +97,15 @@ class UserInterface
     end
 
     def self.search_repos
-
+        puts "Enter keyword to search: [ex: React]"
+        keyword = get_user_input
+        Repo.search(keyword)
+        user_save_repo
+        
     end
 
-    def self.list_user_repos
+    def self.list_user_repos(user_id: @@user.id)
+        p UserRepo.find_by(user_id: user_id)
 
     end
 
@@ -120,7 +120,28 @@ class UserInterface
     def self.exit_program
 
     end
-    
+
+    def self.user_save_repo
+        space(1)
+        puts "*************************************"
+        puts "Would you like to save a repo?[y,n]"
+        puts "*************************************"
+
+        input = get_user_input
+        if input == "y" || input == "Y"
+            save_repo
+            puts "Repo saved."
+            user_save_repo
+        end
+        command_prompt
+    end
+
+    def self.save_repo
+        puts "Enter the Repo ID: "
+        id = get_user_input
+        Repo.save(id.to_i, @@user.id)
+    end
+
     private
     def self.space(n=2)
         n.times do 
