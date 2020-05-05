@@ -12,7 +12,7 @@ class UserInterface
 
     def self.login_or_create_account
         login_or_create_view
-        puts "What would you like to do?[Enter number]"
+        puts "What would you like to do? [Enter number]"
         action = get_user_input
         if action == "1"
             login
