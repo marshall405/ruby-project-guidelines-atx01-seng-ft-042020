@@ -2,6 +2,8 @@ require 'rest-client'
 require 'json'
 
 class Repo < ActiveRecord::Base
+    # Searches the github repo for key_terms
+    
     @@temp_repos = []
     def self.search(key_term)
         response = RestClient.get "https://api.github.com/search/repositories?q=#{key_term}"

@@ -1,5 +1,14 @@
 require_relative '../config/environment'
 
 
+class Run 
 
-puts "HELLO WORLD"
+    def self.start
+        UserInterface.greeting 
+    end
+
+end
+
+
+
+Run.start
