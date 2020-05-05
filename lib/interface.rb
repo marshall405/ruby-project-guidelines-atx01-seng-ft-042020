@@ -99,9 +99,14 @@ class UserInterface
     def self.search_repos
         puts "Enter keyword to search: [ex: React]"
         keyword = get_user_input
-        Repo.search(keyword)
-        user_save_repo
-        
+        if keyword == "back"
+            command_prompt
+        elsif keyword != ""
+            Repo.search(keyword)
+            user_save_repo
+        else
+            self.search_repos
+        end
     end
 
     def self.list_user_repos(user_id: @@user.id)
@@ -139,7 +144,11 @@ class UserInterface
     def self.save_repo
         puts "Enter the Repo ID: "
         id = get_user_input
-        Repo.save(id.to_i, @@user.id)
+        if id
+            UserRepo.create(@@user, Repo.searched_repos[id.to_i])
+        else
+            self.save_repo
+        end
     end
 
     private
