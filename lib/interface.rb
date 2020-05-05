@@ -38,6 +38,7 @@ class UserInterface
         puts "*********************"
         puts "Enter a username:"
         username = get_user_input
+        self.create_account if username == ""
         user = User.find_by(username: username)
         if user
             create_account("#{username} is unavailable")
@@ -110,7 +111,10 @@ class UserInterface
     end
 
     def self.list_user_repos(user_id: @@user.id)
-        p UserRepo.find_by(user_id: user_id)
+        UserRepo.select(user_id).each do |user_repo|
+            pp Repo.find(user_repo.repo_id)
+        end
+        command_prompt
     end
 
     def self.delete_user_repo
