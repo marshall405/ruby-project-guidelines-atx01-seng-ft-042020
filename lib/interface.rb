@@ -111,7 +111,6 @@ class UserInterface
 
     def self.list_user_repos(user_id: @@user.id)
         p UserRepo.find_by(user_id: user_id)
-
     end
 
     def self.delete_user_repo
