@@ -52,10 +52,10 @@ class UserInterface
         login_view 
         puts "Enter your username:"
         username = get_user_input
-        user = User.find_by(username: username)
+        user = User.login(username)
         if user 
-            @@user = User.new(username: user["username"], name: user["name"], id: user["id"])
-            welcome_user(@@user.username)
+            @@user = user
+            welcome_user(user.username)
             command_prompt
         else
             could_not_find_user_view(username)
