@@ -6,4 +6,8 @@ class UserRepo < ActiveRecord::Base
         super(user_id: user.id, repo_id: repo.id)
     end
 
+    
+
+
+
 end

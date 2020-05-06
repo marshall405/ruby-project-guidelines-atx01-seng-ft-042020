@@ -3,11 +3,14 @@ require 'json'
 require "pry"
 class Repo < ActiveRecord::Base
 
+    has_many :user_repos
+    has_many :users, through: :user_repos
+
     @@temp_repos = []
 
     def display(index)
         puts "*" * 30
-        puts "Save ID: #{index}"
+        puts "Repo ID: #{index}"
         puts "Name: #{self.name}"
         puts "URL: #{self.url}"
         puts "Desc: #{self.description}"
