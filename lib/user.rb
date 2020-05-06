@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
     @@user_repos = []
 
     def display_repos_by_user
-        self.repos.each do |repo|
+        user = User.find_by(username: username)
+        user.repos.each do |repo|
             repo.display
         end
     end

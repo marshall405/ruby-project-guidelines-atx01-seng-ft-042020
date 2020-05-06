@@ -108,7 +108,7 @@ class UserInterface
         puts "Are you sure?[y,n]"
         y_n = get_user_input
         if y_n.downcase == "y"
-            puts @@user.delete_repo(id)
+            puts @@user.delete_repo(id.to_i)
         end
         command_prompt
     end
