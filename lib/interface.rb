@@ -103,19 +103,21 @@ class UserInterface
     end
 
     def self.delete_user_repo
+        @@user.display_repos_by_user
+        space(1)
         puts "Which Repo? [Repo ID]"
         id = get_user_input
         puts "Are you sure?[y,n]"
         y_n = get_user_input
         if y_n.downcase == "y"
-            puts @@user.delete_repo(id.to_i)
+            @@user.delete_repo(id.to_i)
         end
         command_prompt
     end
 
     def self.update_username
         puts "Current username: #{@@user.username}"
-        puts "Enter new username: or type 'back'"
+        puts "Enter new username or type 'back'"
         new_username = get_user_input
         does_username_exist = User.find_by(username: new_username)
         if new_username == "back"
