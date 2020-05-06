@@ -6,9 +6,8 @@ class User < ActiveRecord::Base
 
     @@user_repos = []
 
-    def self.display_repos_by_user(user)
-        user = User.find(user.id)
-        user.repos.each do |repo|
+    def display_repos_by_user
+        User.find(self.id).repos.reverse.each do |repo|
             repo.display
         end
     end

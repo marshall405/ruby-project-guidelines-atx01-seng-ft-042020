@@ -28,7 +28,7 @@ class UserInterface
     end
 
     def self.get_user_input
-        gets.chomp
+        gets.strip.chomp
     end
 
     def self.create_account(message=nil)
@@ -98,7 +98,7 @@ class UserInterface
     end
 
     def self.list_user_repos
-        User.display_repos_by_user(@@user) 
+        @@user.display_repos_by_user
         command_prompt
     end
 
@@ -160,8 +160,8 @@ class UserInterface
         id = get_user_input
         if id.downcase == 'back'
             command_prompt
-        elsif id.to_i
-            UserRepo.create(@@user, Repo.searched_repos[id.to_i])
+        elsif !id.empty? && id.to_i != 0
+            UserRepo.create(@@user, Repo.searched_repos[id.to_i - 1])
         else
             self.save_repo
         end

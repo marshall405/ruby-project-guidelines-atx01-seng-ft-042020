@@ -45,7 +45,7 @@ class Repo < ActiveRecord::Base
 
     def self.display_results
         @@temp_repos.each_with_index do |repo, index|
-            repo.display(id: index)
+            repo.display(id: index + 1)
         end
     end
 
