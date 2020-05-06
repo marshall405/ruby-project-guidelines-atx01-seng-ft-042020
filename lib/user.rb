@@ -43,6 +43,11 @@ class User < ActiveRecord::Base
         puts "repo deleted"
     end
 
+    def self.update_username(username, new_name)
+        user = User.find_by(username: username)
+        user.update(username: new_name)
+        user.username
+    end
 
 
 

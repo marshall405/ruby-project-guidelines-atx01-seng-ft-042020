@@ -74,7 +74,7 @@ class UserInterface
         puts "****************************"
         puts "*   [ 3 ] Delete a Repo    *"
         puts "****************************"
-        puts "*   [ 4 ] Update Name      *"
+        puts "*   [ 4 ] Update Username  *"
         puts "****************************"
         puts "*   [ 5 ] Exit             *"
         puts "****************************"
@@ -88,7 +88,7 @@ class UserInterface
         when "3"
             delete_user_repo
         when "4"
-            update_user_name
+            update_username
         when "5"
             exit_program
         else 
@@ -126,7 +126,22 @@ class UserInterface
         command_prompt
     end
 
-    def self.update_user_name
+    def self.update_username
+        puts "Current name: #{@@user.username}"
+        puts "Enter new username: or type 'back'"
+        name = get_user_input
+
+        if name == "back"
+            command_prompt
+        elsif name != "" && name != @@user.username
+            @@user.username = User.update_username(@@user.username, name)
+            puts "*" * 10
+            puts "Username changed to '#{@@user.username}'!"
+            command_prompt
+        else 
+            puts "Enter valid name"
+            self.update_username
+        end
 
     end
 
