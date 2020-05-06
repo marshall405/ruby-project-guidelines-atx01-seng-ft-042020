@@ -13,13 +13,19 @@ class User < ActiveRecord::Base
             repo.display(id: index + 1)
         end
     end
-
+    def user_repos_count
+        User.find_by(username: username).repos.count
+    end
     
     def delete_repo(index)
-        repo = @@user_repos[index - 1]
-        row = UserRepo.where(repo_id: repo.id, user_id: self.id)
-        UserRepo.delete(row)
-        puts "Repo ID: #{repo.name} has been deleted."
+        repo = @@user_repos[index]
+        if repo
+            row = UserRepo.where(repo_id: repo.id, user_id: self.id)
+            UserRepo.delete(row)
+            puts "#{repo.name} has been deleted."
+        else 
+            false
+        end
     end
 
     def update_username(new_name)
