@@ -3,17 +3,22 @@ require 'json'
 require "pry"
 class Repo < ActiveRecord::Base
 
+    has_many :user_repos
+    has_many :users, through: :user_repos
+
     @@temp_repos = []
 
     def display(index)
         puts "*" * 30
-        puts "Save ID: #{index}"
+        puts "Repo ID: #{index}"
         puts "Name: #{self.name}"
         puts "URL: #{self.url}"
         puts "Desc: #{self.description}"
         puts "Forks: #{self.forks}, Stars: #{self.stars}, Private: #{self.private}, Owner ID: #{self.owner_id}"
     end
+
     def self.search(key_term)
+        @@temp_repos = []
         response = RestClient.get "https://api.github.com/search/repositories?q=#{key_term}"
         JSON.parse(response.body)["items"].each do |repo|
             @@temp_repos << new(
@@ -23,7 +28,7 @@ class Repo < ActiveRecord::Base
                 private: repo["private"],
                 owner_id: repo["owner"]["id"],
                 forks: repo["forks"],
-                stars: repo["watchers_count"]
+                stars: repo["watcher_count"]
                 )
         end
         display_results
