@@ -8,12 +8,15 @@ class User < ActiveRecord::Base
 
     def display_repos_by_user
         user = User.find_by(username: username)
-        user.repos.each do |repo|
-            repo.display
+        @@user_repos = user.repos 
+        user.repos.each_with_index do |repo, index|
+            repo.display(id: index + 1)
         end
     end
 
-    def delete_repo(repo_id)
+    
+    def delete_repo(index)
+        repo_id = @@user_repos[index - 1].id
         row = UserRepo.where(repo_id: repo_id, user_id: self.id)
         UserRepo.delete(row)
         "Repo ID: #{repo_id} has been deleted."
