@@ -148,7 +148,7 @@ class UserInterface
         input = get_user_input
         if input.downcase == "y"
             save_repo
-            puts "Repo saved."
+           
             user_save_repo
         else 
             command_prompt
@@ -161,7 +161,9 @@ class UserInterface
         if id.downcase == 'back'
             command_prompt
         elsif !id.empty? && id.to_i != 0
-            UserRepo.create(@@user, Repo.searched_repos[id.to_i - 1])
+            repo = Repo.searched_repos[id.to_i - 1]
+            UserRepo.create(@@user, repo)
+            puts "#{repo.name} saved."
         else
             self.save_repo
         end
