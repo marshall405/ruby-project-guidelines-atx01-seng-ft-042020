@@ -121,6 +121,7 @@ class UserInterface
             end
         else 
             puts "No repos to delete."
+            command_prompt
         end 
     end
 
