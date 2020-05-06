@@ -16,10 +16,11 @@ class User < ActiveRecord::Base
 
     
     def delete_repo(index)
+        display_repos_by_user
         repo_id = @@user_repos[index - 1].id
         row = UserRepo.where(repo_id: repo_id, user_id: self.id)
         UserRepo.delete(row)
-        "Repo ID: #{repo_id} has been deleted."
+        "Repo ID: #{index} has been deleted."
     end
 
     def update_username(new_name)
