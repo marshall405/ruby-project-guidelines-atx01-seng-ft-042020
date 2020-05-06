@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
     @@user_repos = []
 
     def display_repos_by_user
-        User.find(self.id).repos.reverse.each do |repo|
+        self.repos.each do |repo|
             repo.display
         end
     end
@@ -23,6 +23,9 @@ class User < ActiveRecord::Base
         "Username has been changed to #{new_name}"
     end
 
+    def self.login(username)
+        user = self.find_by(username: username)
+    end
 
 
 end
