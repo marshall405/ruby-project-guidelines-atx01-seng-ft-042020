@@ -131,7 +131,7 @@ class UserInterface
     end
 
     def self.exit_program
-
+        puts "Goodbye"
     end
 
     def self.user_save_repo
