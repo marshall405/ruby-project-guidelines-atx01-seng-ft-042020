@@ -35,8 +35,14 @@ class User < ActiveRecord::Base
                 stars: repo["watchers_count"]
             ).display(repo.id)
         end
-        ""
     end
+
+    def delete_repo(repo_id)
+        row = UserRepo.where(repo_id: repo_id, user_id: self.id)
+        UserRepo.delete(row)
+        puts "repo deleted"
+    end
+
 
 
 
