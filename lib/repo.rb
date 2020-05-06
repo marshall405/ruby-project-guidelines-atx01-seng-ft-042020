@@ -8,9 +8,9 @@ class Repo < ActiveRecord::Base
 
     @@temp_repos = []
 
-    def display(index)
+    def display(id)
         puts "*" * 30
-        puts "Repo ID: #{index}"
+        puts "Repo ID: #{id}"
         puts "Name: #{self.name}"
         puts "URL: #{self.url}"
         puts "Desc: #{self.description}"
@@ -28,7 +28,7 @@ class Repo < ActiveRecord::Base
                 private: repo["private"],
                 owner_id: repo["owner"]["id"],
                 forks: repo["forks"],
-                stars: repo["watcher_count"]
+                stars: repo["watchers_count"]
                 )
         end
         display_results

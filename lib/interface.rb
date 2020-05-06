@@ -58,7 +58,7 @@ class UserInterface
         username = get_user_input
         user = User.find_by(username: username)
         if user 
-            @@user = User.new(username: user["username"], name: user["name"])
+            @@user = User.new(username: user["username"], name: user["name"], id: user["id"])
             command_prompt
         else
             puts "Could not find user \"#{username}\""
@@ -110,24 +110,20 @@ class UserInterface
         end
     end
 
-    def self.list_user_repos(user_id: @@user.id)
-        UserRepo.select(user_id).each_with_index do |user_repo, index|
-            repo = Repo.find(user_repo.repo_id)
-            Repo.new(
-                name: repo["name"],
-                description: repo["description"],
-                url: repo["url"],
-                private: repo["private"],
-                owner_id: repo["owner_id"],
-                forks: repo["forks"],
-                stars: repo["watcher_count"]
-            ).display(index + 1)
-        end
+    def self.list_user_repos
+        @@user.get_user_repos 
         command_prompt
     end
 
     def self.delete_user_repo
-        
+        puts "Which repo?"
+        id = get_user_input
+        puts "are you sure?????????"
+        y_n = get_user_input
+        if y_n == "y"
+            @@user.delete_repo(id)
+        end
+        command_prompt
     end
 
     def self.update_user_name
