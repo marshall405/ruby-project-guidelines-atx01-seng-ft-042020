@@ -184,3 +184,10 @@ class UserInterface
 
 
 end
+
+#1. Move methods from interface to appropriate classes
+#2. Add to menu "Search user repo by keyword" using include
+#3. Add to menu "Delete user"
+#4. Add conditional option to delete all repos for a user with "*" and inform in prompt
+#5. Look into TTY and other project requirements
+#6. Fix repo search > save > list > exit returns to command_prompt one extra time
