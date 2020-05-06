@@ -8,7 +8,11 @@ class Repo < ActiveRecord::Base
 
     @@temp_repos = []
 
-    def display(id)
+    
+
+
+    def display(id: nil)
+        id = id.nil? ? self.id : id 
         puts "*" * 30
         puts "Repo ID: #{id}"
         puts "Name: #{self.name}"
@@ -34,10 +38,14 @@ class Repo < ActiveRecord::Base
         display_results
     end
 
+    def self.find_users_by_repo_id(id)
+        # currently not tied to user interface!!!!!!!!!
+        Repo.find(id).users 
+    end
 
     def self.display_results
         @@temp_repos.each_with_index do |repo, index|
-            repo.display(index)
+            repo.display(id: index)
         end
     end
 

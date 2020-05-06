@@ -14,10 +14,13 @@ class UserInterface
         login_or_create_view
         puts "What would you like to do? [Enter number]"
         action = get_user_input
-        if action == "1"
+        case action
+        when "1"
             login
-        elsif action == "2"
+        when "2"
             create_account
+        when "3"
+            exit_program
         else
             "invalid input"
             login_or_create_account
@@ -29,13 +32,10 @@ class UserInterface
     end
 
     def self.create_account(message=nil)
-        space(1)
         if message
             puts message
         end
-        puts "*********************"
-        puts "*      CREATE       *"
-        puts "*********************"
+        create_view 
         puts "Enter a username:"
         username = get_user_input
         self.create_account if username == ""
@@ -43,41 +43,28 @@ class UserInterface
         if user
             create_account("#{username} is unavailable")
         end
-        puts "Enter your name:"
-        name = get_user_input
-        @@user = User.create(username: username, name: name)
+        @@user = User.create(username: username)
+        welcome_user(@@user.username)
         command_prompt
     end
 
     def self.login
-        space(1) 
-        puts "*********************"
-        puts "*       LOGIN       *"
-        puts "*********************"
+        login_view 
         puts "Enter your username:"
         username = get_user_input
         user = User.find_by(username: username)
         if user 
             @@user = User.new(username: user["username"], name: user["name"], id: user["id"])
+            welcome_user(@@user.username)
             command_prompt
         else
-            puts "Could not find user \"#{username}\""
+            could_not_find_user_view(username)
             login_or_create_account
         end
     end
 
     def self.command_prompt
-        puts "****************************"
-        puts "*   [ 1 ] Search Repos     *"
-        puts "****************************"    
-        puts "*   [ 2 ] List Your Repos  *"
-        puts "****************************"
-        puts "*   [ 3 ] Delete a Repo    *"
-        puts "****************************"
-        puts "*   [ 4 ] Update Username  *"
-        puts "****************************"
-        puts "*   [ 5 ] Exit             *"
-        puts "****************************"
+        command_prompt_view
         puts "What action would you like to take?"
         action = get_user_input
         case action
@@ -111,42 +98,45 @@ class UserInterface
     end
 
     def self.list_user_repos
-        @@user.get_user_repos 
+        User.display_repos_by_user(@@user) 
         command_prompt
     end
 
     def self.delete_user_repo
-        puts "Which repo?"
+        puts "Which Repo? [Repo ID]"
         id = get_user_input
-        puts "are you sure?????????"
+        puts "Are you sure?[y,n]"
         y_n = get_user_input
-        if y_n == "y"
-            @@user.delete_repo(id)
+        if y_n.downcase == "y"
+            puts @@user.delete_repo(id)
         end
         command_prompt
     end
 
     def self.update_username
-        puts "Current name: #{@@user.username}"
+        puts "Current username: #{@@user.username}"
         puts "Enter new username: or type 'back'"
-        name = get_user_input
-
-        if name == "back"
+        new_username = get_user_input
+        does_username_exist = User.find_by(username: new_username)
+        if new_username == "back"
             command_prompt
-        elsif name != "" && name != @@user.username
-            @@user.username = User.update_username(@@user.username, name)
+        elsif new_username != "" && new_username != @@user.username && !does_username_exist
             puts "*" * 10
-            puts "Username changed to '#{@@user.username}'!"
+            puts @@user.update_username(new_username)
+            puts "*" * 10
+            @@user = User.find(@@user.id)
             command_prompt
         else 
+            space
+            puts "!" * 10
             puts "Enter valid name"
+            puts "!" * 10
             self.update_username
         end
-
     end
 
     def self.exit_program
-        puts "Goodbye"
+        exit_program_view
     end
 
     def self.user_save_repo
@@ -156,18 +146,21 @@ class UserInterface
         puts "*************************************"
 
         input = get_user_input
-        if input == "y" || input == "Y"
+        if input.downcase == "y"
             save_repo
             puts "Repo saved."
             user_save_repo
+        else 
+            command_prompt
         end
-        command_prompt
     end
 
     def self.save_repo
         puts "Enter the Repo ID: "
         id = get_user_input
-        if id
+        if id.downcase == 'back'
+            command_prompt
+        elsif id.to_i
             UserRepo.create(@@user, Repo.searched_repos[id.to_i])
         else
             self.save_repo
