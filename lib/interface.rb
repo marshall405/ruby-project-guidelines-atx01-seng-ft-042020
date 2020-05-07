@@ -114,7 +114,10 @@ class UserInterface
             puts "Which Repo? [Repo ID]"
             id = get_user_input
             if !id.empty? && (id.to_i > 0 && id.to_i <= count)
+                puts "You sure?"
                 @@user.delete_repo(id.to_i - 1)
+                
+
                 command_prompt
             else
                 delete_user_repo(err: "Enter a valid Repo ID")
@@ -168,7 +171,7 @@ class UserInterface
     end
 
     def self.save_repo
-        puts "Enter the Repo ID: "
+        puts "Enter the Repo ID, or type 'back'"
         id = get_user_input
         if id.downcase == 'back'
             command_prompt
