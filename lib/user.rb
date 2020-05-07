@@ -35,6 +35,11 @@ class User < ActiveRecord::Base
         end
     end
 
+    def delete_user
+        puts self
+    end
+
+
     def update_username(new_name)
         User.find(self.id).update(username: new_name)
         "Username has been changed to #{new_name}"
