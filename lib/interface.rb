@@ -1,3 +1,6 @@
+require "tty-prompt"
+
+
 class UserInterface 
     # Interacts with user via command line
     @@user = nil
@@ -11,15 +14,22 @@ class UserInterface
     end
 
     def self.login_or_create_account
-        login_or_create_view
-        puts "What would you like to do? [Enter number]"
-        action = get_user_input
+        prompt = TTY::Prompt.new 
+        # login_or_create_view
+        # puts "What would you like to do? [Enter number]"
+        action = prompt.select("What would you like to do?") do |menu|
+            menu.choice name: 'LOGIN', value: 1
+            menu.choice name: 'CREATE', value: 2
+            menu.choice name: 'EXIT', value: 3
+        end
+        action
+
         case action
-        when "1"
+        when 1
             login
-        when "2"
+        when 2
             create_account
-        when "3"
+        when 3
             exit_program
         else
             "invalid input"
@@ -32,6 +42,7 @@ class UserInterface
     end
 
     def self.create_account(message=nil)
+        prompt = TTY::Prompt.new 
         if message
             puts message
         end
@@ -41,7 +52,7 @@ class UserInterface
         self.create_account if username == ""
         user = User.find_by(username: username)
         if user
-            create_account("#{username} is unavailable")
+            create_account(prompt.error("#{username} is unavailable"))
         end
         @@user = User.create(username: username)
         welcome_user(@@user.username)
@@ -64,19 +75,23 @@ class UserInterface
     end
 
     def self.command_prompt
+        prompt = TTY::Prompt.new 
         command_prompt_view
-        puts "What action would you like to take?"
-        action = get_user_input
+        # puts "What action would you like to take?"
+        # action = get_user_input
+
+        action = prompt.select("What action would like to take?", ["Search Repos", "List Your Repos", "Delete a Repo", "Update Username", "Exit"])
+
         case action
-        when "1"
+        when "Search Repos"
             search_repos
-        when "2"
+        when "List Your Repos"
             list_user_repos
-        when "3"
+        when "Delete a Repo"
             delete_user_repo
-        when "4"
+        when "Update Username"
             update_username
-        when "5"
+        when "Exit"
             exit_program
         else 
             puts "Invalid Action"
