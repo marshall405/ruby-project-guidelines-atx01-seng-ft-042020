@@ -35,6 +35,13 @@ class User < ActiveRecord::Base
         end
     end
 
+    def delete_all_user_repos
+        get_repos.each do |repo|
+            row = UserRepo.where(repo_id: repo.id, user_id: self.id)
+            UserRepo.delete(row)
+        end
+    end
+
     def delete_user
         puts self
     end

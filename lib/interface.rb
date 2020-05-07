@@ -4,10 +4,21 @@ class UserInterface
 
     extend Views
     extend Commands 
+
+    def self.stopper
+        puts "Any input will return to main menu."
+
+        input = get_user_input
+
+        if input
+            command_prompt
+        end
+    end
+
+
     def self.start
         greeting
         login_or_create_account
-
     end
 
     def self.login_or_create_account
@@ -117,7 +128,8 @@ class UserInterface
 
     def self.list_user_repos
         @@user.display_repos_by_user
-        command_prompt
+        space
+        stopper
     end
 
     def self.delete_user_repo(err: nil)
@@ -131,14 +143,14 @@ class UserInterface
             end
             puts "Which Repo? [Repo ID]\n\nType '***' to delete all user repos."
             id = get_user_input
-            if @@user.valid_repo_id(id)
-                space(1)
-                puts "Are you sure?"
-                input = get_user_input
-                space(1)
-                if input.downcase == 'y'
-                    @@user.delete_repo(id.to_i - 1)
-                end
+
+            if id == "back"
+                command_prompt
+            elsif id == "***"
+                user_delete_all_user_repos
+                command_prompt
+            elsif @@user.valid_repo_id(id)
+                user_delete_single_user_repo
                 command_prompt
             else
                 delete_user_repo(err: "Enter a valid Repo ID")
@@ -150,8 +162,20 @@ class UserInterface
         end 
     end
 
-    def self.delete_all_user_repos
-        
+    def self.user_delete_single_user_repo
+        space(1)
+        puts "Are you sure?"
+        input = get_user_input
+        space(1)
+        if input.downcase == 'y'
+            @@user.delete_repo(id.to_i - 1)
+        end
+    end
+
+    def self.user_delete_all_user_repos
+        puts "Are you sure you want to delete ALL of your repos? (y)?"
+        input = get_user_input
+        input.downcase == "y" ? @@user.delete_all_user_repos : delete_user_repo
     end
 
     def self.update_username
@@ -214,10 +238,9 @@ class UserInterface
         puts "Enter the Repo ID, or type 'back'"
         id = get_user_input
         
-
         if id.downcase == 'back'
             command_prompt
-        elsif !id.empty? && id.to_i != 0 && Repo.all.exclude?(repo)
+        elsif !id.empty? && id.to_i != 0
             repo = Repo.searched_repos[id.to_i - 1]
             UserRepo.create(@@user, repo)
             puts "#{repo.name} saved."
@@ -244,6 +267,6 @@ end
 #1. Limit description word count to 200
 #2. Add to menu "Search user repo by keyword" using include
 #3. Add to menu "Delete user"
-#4. Add conditional option to delete all repos for a user with "*" and inform in prompt
+
 #5. Look into TTY and other project requirements
 #6. Fix repo search > save > list > exit returns to command_prompt one extra time
