@@ -103,6 +103,7 @@ class UserInterface
     end
 
     def self.delete_user_repo(err: nil)
+        #add back function
         if  @@user.user_repos_count > 0
             space(10)
             @@user.display_repos_by_user
@@ -159,9 +160,10 @@ class UserInterface
 
     def self.user_save_repo
         space(1)
-        puts "*************************************"
-        puts "Would you like to save a repo?[y,n]"
-        puts "*************************************"
+        puts "
+        *************************************
+         Would you like to save a repo?[y,n]
+        *************************************"
 
         input = get_user_input
         if input.downcase == "y"
