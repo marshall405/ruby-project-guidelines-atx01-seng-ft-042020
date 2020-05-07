@@ -23,7 +23,7 @@ class Repo < ActiveRecord::Base
 
     def self.search(key_term)
         @@temp_repos = []
-        response = RestClient.get "https://api.github.com/search/repositories?q=#{key_term}"
+        response = RestClient.get "https://api.github.com/search/repositories?q=#{key_term}&per_page=100"
         JSON.parse(response.body)["items"].each do |repo|
             @@temp_repos << new(
                 name: repo["name"],

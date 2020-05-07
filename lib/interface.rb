@@ -98,38 +98,59 @@ class UserInterface
     end
 
     def self.list_user_repos
-        @@user.display_repos_by_user
-        command_prompt
+        if @@user.user_repos_count > 0
+            @@user.display_repos_by_user
+            space(1)
+            puts "Press Enter when you are finished!"
+            input = get_user_input
+            command_prompt
+        else 
+            space(1)
+            puts "No saved repos for #{@@user.username}"
+            command_prompt
+        end
     end
 
-    def self.delete_user_repo(err: nil)
+    def self.delete_user_repo
         #add back function
         if  @@user.user_repos_count > 0
             space(10)
             @@user.display_repos_by_user
             space(1)
-            if err 
-                puts err
-            end
-            puts "Which Repo? [Repo ID]"
+
+            puts "Which Repo would you like to delete? [Repo ID]"
             id = get_user_input
-            if @@user.valid_repo_id(id)
-                space(1)
-                puts "Are you sure?"
-                input = get_user_input
-                space(1)
-                if input.downcase == 'y'
-                    @@user.delete_repo(id.to_i - 1)
-                end
+            if id == 'back'
                 command_prompt
             else
-                delete_user_repo(err: "Enter a valid Repo ID")
+                while !@@user.valid_repo_id(id) do 
+                    puts "Repo ID must be between 1 and 30"
+                    id = get_user_input
+                    if id == 'back'
+                        exit_func = true
+                        break
+                    end
+                end  
+                input = ""
+                if !exit_func 
+                    space(1)
+                    puts "Are you sure? [y,n]"
+                    input = get_user_input
+                end 
+                if input.downcase == 'y'
+                    @@user.delete_repo(id.to_i - 1)
+                    command_prompt
+                else
+                    space
+                    puts "Nothing deleted."
+                    command_prompt
+                end
             end
-        else 
+        else
             space(3)
             puts "No repos to delete!"
             command_prompt
-        end 
+        end
     end
 
     def self.update_username
@@ -177,10 +198,11 @@ class UserInterface
     def self.save_repo
         puts "Enter the Repo ID, or type 'back'"
         id = get_user_input
+        count = Repo.searched_repos.count 
         if id.downcase == 'back'
             return command_prompt
         else 
-            while id.to_i <= 0 || id.to_i > 30 do 
+            while id.to_i <= 0 || id.to_i > count do 
                 puts "Repo ID must be between 1 and 30"                
                 id = get_user_input
             end
@@ -198,6 +220,7 @@ class UserInterface
     end
 
     private
+
     def self.space(n=2)
         n.times do 
             puts "\n"
