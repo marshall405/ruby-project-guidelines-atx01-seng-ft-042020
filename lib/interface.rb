@@ -6,6 +6,7 @@ class UserInterface
     extend Commands 
 
     def self.stopper
+        space
         puts "Any input will return to main menu."
 
         input = get_user_input
@@ -14,6 +15,7 @@ class UserInterface
             command_prompt
         end
     end
+    
 
 
     def self.start
@@ -67,6 +69,7 @@ class UserInterface
         if user 
             @@user = user
             welcome_user(user.username)
+            stopper
             command_prompt
         else
             could_not_find_user_view(username)
@@ -128,7 +131,6 @@ class UserInterface
 
     def self.list_user_repos
         @@user.display_repos_by_user
-        space
         stopper
     end
 
@@ -158,6 +160,7 @@ class UserInterface
         else 
             space(3)
             puts "No repos to delete!"
+            stopper
             command_prompt
         end 
     end
@@ -171,6 +174,7 @@ class UserInterface
             @@user.delete_repo(id.to_i - 1)
         elsif input.downcase == 'n'
             puts "No repo deleted."
+            stopper
         end
     end
 
@@ -192,12 +196,14 @@ class UserInterface
             puts @@user.update_username(new_username)
             puts "*" * 10
             @@user = User.find(@@user.id)
+            stopper
             command_prompt
         else 
             space
             puts "!" * 10
             puts "Enter valid name"
             puts "!" * 10
+            stopper
             self.update_username
         end
     end
@@ -211,9 +217,11 @@ class UserInterface
             login_or_create_account
         elsif input.downcase == "n"
             puts "\n\n\nNo users deleted.\n\n\nReturning to edit user menu."
+            stopper
             edit_user
         else
             puts "\n\n\nPlease enter a valid command."
+            stopper
             user_delete_user
         end
     end

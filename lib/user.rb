@@ -43,7 +43,8 @@ class User < ActiveRecord::Base
     end
 
     def delete_user
-        puts self
+        delete_all_user_repos
+        self.delete
     end
 
 
