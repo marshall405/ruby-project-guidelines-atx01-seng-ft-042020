@@ -150,7 +150,7 @@ class UserInterface
                 user_delete_all_user_repos
                 command_prompt
             elsif @@user.valid_repo_id(id)
-                user_delete_single_user_repo
+                user_delete_single_user_repo(id)
                 command_prompt
             else
                 delete_user_repo(err: "Enter a valid Repo ID")
@@ -162,13 +162,15 @@ class UserInterface
         end 
     end
 
-    def self.user_delete_single_user_repo
+    def self.user_delete_single_user_repo(id)
         space(1)
-        puts "Are you sure?"
+        puts "Are you sure? (y / n)"
         input = get_user_input
         space(1)
         if input.downcase == 'y'
             @@user.delete_repo(id.to_i - 1)
+        elsif input.downcase == 'n'
+            puts "No repo deleted."
         end
     end
 
@@ -237,16 +239,24 @@ class UserInterface
     def self.save_repo
         puts "Enter the Repo ID, or type 'back'"
         id = get_user_input
-        
+        count = Repo.searched_repos.count 
         if id.downcase == 'back'
-            command_prompt
-        elsif !id.empty? && id.to_i != 0
+            return command_prompt
+        else 
+            while id.to_i <= 0 || id.to_i > count do 
+                puts "Repo ID must be between 1 and #{count}"                
+                id = get_user_input
+            end
             repo = Repo.searched_repos[id.to_i - 1]
-            UserRepo.create(@@user, repo)
-            puts "#{repo.name} saved."
-        else
-            puts "Repo already taken"
-            self.save_repo
+            already_saved = @@user.check_for_saved_repo(repo)
+            if already_saved
+                space
+                puts "#{repo.name} already saved!"
+            else
+                UserRepo.create(@@user, repo)
+                space
+                puts "#{repo.name} saved!"
+            end
         end
     end
 
