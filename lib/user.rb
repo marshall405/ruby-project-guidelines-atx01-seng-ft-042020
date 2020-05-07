@@ -18,6 +18,12 @@ class User < ActiveRecord::Base
         get_repos.count
     end
     
+    def check_for_saved_repo(repo)
+        get_repos.find do |saved_repo|
+            saved_repo.name == repo.name && saved_repo.description == repo.description 
+        end
+    end
+
     def delete_repo(index)
         repo = get_repos[index]
         if repo

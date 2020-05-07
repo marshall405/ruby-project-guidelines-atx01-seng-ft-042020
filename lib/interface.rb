@@ -168,7 +168,6 @@ class UserInterface
         input = get_user_input
         if input.downcase == "y"
             save_repo
-           
             user_save_repo
         else 
             command_prompt
@@ -179,13 +178,22 @@ class UserInterface
         puts "Enter the Repo ID, or type 'back'"
         id = get_user_input
         if id.downcase == 'back'
-            command_prompt
-        elsif !id.empty? && id.to_i != 0
+            return command_prompt
+        else 
+            while id.to_i <= 0 || id.to_i > 30 do 
+                puts "Repo ID must be between 1 and 30"                
+                id = get_user_input
+            end
             repo = Repo.searched_repos[id.to_i - 1]
-            UserRepo.create(@@user, repo)
-            puts "#{repo.name} saved."
-        else
-            self.save_repo
+            already_saved = @@user.check_for_saved_repo(repo)
+            if already_saved
+                space
+                puts "#{repo.name} already saved!"
+            else
+                UserRepo.create(@@user, repo)
+                space
+                puts "#{repo.name} saved!"
+            end
         end
     end
 
