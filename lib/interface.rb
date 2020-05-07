@@ -103,8 +103,7 @@ class UserInterface
     end
 
     def self.delete_user_repo(err: nil)
-        count = @@user.user_repos_count
-        if  count > 0
+        if  @@user.user_repos_count > 0
             space(10)
             @@user.display_repos_by_user
             space(1)
@@ -113,17 +112,29 @@ class UserInterface
             end
             puts "Which Repo? [Repo ID]"
             id = get_user_input
+<<<<<<< HEAD
             if !id.empty? && (id.to_i > 0 && id.to_i <= count)
                 puts "You sure?"
                 @@user.delete_repo(id.to_i - 1)
                 
 
+=======
+            if @@user.valid_repo_id(id)
+                space(1)
+                puts "Are you sure?"
+                input = get_user_input
+                space(1)
+                if input.downcase == 'y'
+                    @@user.delete_repo(id.to_i - 1)
+                end
+>>>>>>> d3eff57c1dcd359bfe53b4b78721d89826e769d9
                 command_prompt
             else
                 delete_user_repo(err: "Enter a valid Repo ID")
             end
         else 
-            puts "No repos to delete."
+            space(3)
+            puts "No repos to delete!"
             command_prompt
         end 
     end
@@ -190,7 +201,6 @@ class UserInterface
             puts "\n"
         end
     end
-
 
 
 end
