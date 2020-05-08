@@ -85,10 +85,16 @@ class UserInterface
             space(1)
             username = get_user_input
             while username.empty?
-                print "Username cannot be empty: ".red.on_black
+                print "Enter a username or type 'back'".red.on_black
                 space(1)
                 username = get_user_input
+        
             end
+            if username == 'back'
+                command_prompt
+                break
+            end
+            
             user = User.login(username)
             if user 
                 @@user = user
