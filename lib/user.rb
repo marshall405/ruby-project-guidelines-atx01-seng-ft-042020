@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
     end
 
     def get_repos_by_keyword(keyword)
-        owned = get_repos.select {|repo| repo.name.include?(keyword)}
+        owned = get_repos.select {|repo| repo.name.downcase.include?(keyword.downcase)}
         owned.each {|repo| repo.display}
     end
 
@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
         if repo
             row = UserRepo.where(repo_id: repo.id, user_id: self.id)
             UserRepo.delete(row)
-            puts "#{repo.name} has been deleted."
+            repo
         else 
             false
         end

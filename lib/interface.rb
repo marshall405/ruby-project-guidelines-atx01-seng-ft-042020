@@ -1,5 +1,5 @@
 require 'colorize'
-
+require 'pry'
 class UserInterface 
     # Interacts with user via command line
     @@user = nil
@@ -196,29 +196,38 @@ class UserInterface
 
     def self.list_user_repos
         space(40)
-        @@user.display_repos_by_user
+        if @@user.user_repos_count > 0
+            @@user.display_repos_by_user
+        else 
+            print "No repos saved!".green.on_black
+        end
         repo_stopper
     end
 
     def self.search_user_repos_by_keyword
         space
-        print "Enter keyword to search: [ex: React], or type 'back'.".green.on_black
-        keyword = get_user_input
-        if keyword == "back"
-            repo_actions
-        elsif keyword != ""
-            saved = @@user.get_repos_by_keyword(keyword)
-            if saved.empty?
+        if @@user.user_repos_count > 0        
+            print "Enter keyword to search: [ex: React], or type 'back'.".green.on_black
+            keyword = get_user_input
+            if keyword == "back"
+                repo_actions
+            elsif keyword != ""
+                saved = @@user.get_repos_by_keyword(keyword)
+                if saved.empty?
+                    space
+                    print "No Repos with that keyword".green.on_black
+                end
                 space
-                print "No Repos with that keyword".green.on_black
+                print "Press return to go back to Repo Action menu.".green.on_black
+                get_user_input
+                repo_actions
+            else
+                space(4)
+                print "Invalid Input, going back to Repo Action menu".green.on_black
+                repo_stopper
             end
-            space
-            print "Press return to go back to Repo Action menu.".green.on_black
-            get_user_input
-            repo_actions
         else
-            space(4)
-            print "Invalid Input, going back to Repo Action menu".green.on_black
+            print "No repos saved!".green.on_black
             repo_stopper
         end
     end
@@ -227,61 +236,60 @@ class UserInterface
         if  @@user.user_repos_count > 0
             space(10)
             @@user.display_repos_by_user
-            space(1)
-
-            print "Which Repo? Enter a Repo ID, type '***' to delete all repos or type 'back' to exit.".green.on_black
-            id = get_user_input
-            
-            if id == 'back'
-                command_prompt
-            elsif id == '***'
-                user_delete_all_user_repos
-                stopper
-            else 
-                exit_loop = false
-                delete_all = false
-                while !@@user.valid_repo_id(id)
-                    print "Enter a valid Repo ID, type '***' to delete all repos or type 'back' to exit.".green.on_black
+            space(2)
+            loop do 
+                print "Enter a Repo ID, type '***' to delete all repos or type 'back' to exit.".green.on_black
+                id = get_user_input
+                while id.empty?
+                    print "Cannot be empty.\n".red.on_black
+                    print "Enter a Repo ID, type '***' to delete all repos or type 'back' to exit.".green.on_black
                     id = get_user_input
-                    case id 
-                    when 'back'
-                        exit_loop = true
-                        break
-                    when '***'
-                        delete_all = true
-                        break 
-                    end
                 end
-                space(1)
-                if delete_all
+                if id == 'back'
+                    repo_actions
+                    break
+                elsif id == '***'
                     user_delete_all_user_repos
-                   
-                    stopper
-                elsif exit_loop
-                    command_prompt
-                else
-                    print @@user.delete_repo(id.to_i - 1).green.on_black
-                    stopper
+                    repo_stopper
+                    break
+                else 
+                    if @@user.valid_repo_id(id)
+                        case id 
+                        when 'back'
+                            repo_actions
+                            break
+                        when '***'
+                            user_delete_all_user_repos
+                            break 
+                        else
+                            repo = @@user.delete_repo(id.to_i - 1)
+                            print "\n#{repo.name} has been deleted.\n".green.on_black
+                            repo_stopper
+                            break
+                        end
+                    else
+                        print "Invalid repo ID\n".red.on_black
+                    end
                 end
             end
         else 
             space(3)
             print "No repos to delete!".green.on_black
-            stopper
+            repo_stopper
         end 
     end
 
-    def self.user_delete_single_user_repo(id)
-        space(1)
-        print "Are you sure? (y / n)".green.on_black
-        input = get_user_input
-        space(1)
-        if input.downcase == 'y'
-            @@user.delete_repo(id.to_i - 1)
-        elsif input.downcase == 'n'
-            print "No repo deleted.".green.on_black
-        end
-    end
+    # def self.user_delete_single_user_repo(id)
+    #     space(1)
+    #     print "Are you sure? (y / n)".green.on_black
+    #     input = get_user_input
+    #     space(1)
+    #     if input.downcase == 'y'
+    #         @@user.delete_repo(id.to_i - 1)
+    #     elsif input.downcase == 'n'
+    #         print "No repo deleted.".green.on_black
+    #     end
+    # end
 
     def self.user_delete_all_user_repos
         print "Are you sure you want to delete ALL of your repos? (y)?".green.on_black
