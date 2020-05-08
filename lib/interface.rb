@@ -145,23 +145,33 @@ class UserInterface
 
     def self.repo_actions
         repo_view
-        print "Please choose a repo action.".green.on_black
-        action = get_user_input
-        case action
-        when "1"
-            search_repos
-        when "2"
-            list_user_repos
-        when "3"
-            search_user_repos_by_keyword
-        when "4"
-            delete_user_repo
-        when "5"
-            command_prompt
-        else
-            space(4)
-            print "Please enter a valid repo action.".green.on_black
-            repo_stopper
+        loop do 
+            print "Please choose a repo action.".green.on_black
+            action = get_user_input
+            while action.empty?
+                print "Please enter a valid repo action.\n".red.on_black
+                print "Please choose a repo action.".green.on_black
+                action = get_user_input
+            end
+            case action
+            when "1"
+                search_repos
+                break
+            when "2"
+                list_user_repos
+                break
+            when "3"
+                search_user_repos_by_keyword
+                break
+            when "4"
+                delete_user_repo
+                break
+            when "5"
+                command_prompt
+                break
+            else
+                print "Please enter a valid repo action.\n".red.on_black
+            end
         end
     end
 
