@@ -32,21 +32,24 @@ class UserInterface
     def self.login_or_create_account
         login_or_create_view
         space(3)
-        print "What would you like to do? [Enter number]: ".green.on_black
-        action = get_user_input
-        case action
-        when "1"
-            login
-        when "2"
-            create_account
-        when "3"
-            exit_program
-        else
-            print "Please enter valid action".green.on_black
-            login_or_create_account
+        loop do 
+            print "What would you like to do? [Enter number]: ".green.on_black
+            action = get_user_input
+            case action
+            when "1"
+                login
+                break
+            when "2"
+                create_account
+                break
+            when "3"
+                exit_program
+                break
+            else
+                print "Please enter valid action\n".green.on_black
+            end
         end
     end
-
 
     def self.create_account(message=nil)
         if message
