@@ -263,8 +263,14 @@ class UserInterface
                             break 
                         else
                             repo = @@user.delete_repo(id.to_i - 1)
-                            print "\n#{repo.name} has been deleted.\n".green.on_black
-                            repo_stopper
+                            print "Are you sure? (y)".red.on_black
+                            input = get_user_input
+                            if input.downcase == 'y'
+                                print "\n#{repo.name} has been deleted.\n".green.on_black
+                                repo_stopper
+                            else
+                                repo_stopper
+                            end
                             break
                         end
                     else
@@ -292,7 +298,7 @@ class UserInterface
     # end
 
     def self.user_delete_all_user_repos
-        print "Are you sure you want to delete ALL of your repos? (y)?".green.on_black
+        print "Are you sure you want to delete ALL of your repos? (y)?".red.on_black
         input = get_user_input
         if input.downcase == 'y'
             @@user.delete_all_user_repos 
