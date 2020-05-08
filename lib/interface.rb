@@ -298,25 +298,31 @@ class UserInterface
 
     def self.update_username
         space
-        print "Current username: #{@@user.username}\n".green.on_black
-        print "Enter new username or type 'back'".green.on_black
-        new_username = get_user_input
-        does_username_exist = User.find_by(username: new_username)
-        if new_username == "back"
-            command_prompt
-        elsif new_username != "" && new_username != @@user.username && !does_username_exist
-            print "*" * 10.green.on_black
-            print @@user.update_username(new_username).green.on_black
-            print "*" * 10.green.on_black
-            @@user = User.find(@@user.id)
-            stopper
-        else 
-            space
-            print "!" * 10.green.on_black
-            print "Enter valid name".green.on_black
-            print "!" * 10.green.on_black
-            
-            self.update_username
+        loop do 
+            print "Current username: #{@@user.username}\n".green.on_black
+            print "Enter new username or type 'back'".green.on_black
+            new_username = get_user_input
+            while new_username.empty?
+                print "Cannot be empty.\n".red.on_black
+                print "Enter new username or type 'back'".green.on_black
+                new_username = get_user_input
+            end
+
+            does_username_exist = User.find_by(username: new_username)
+            if new_username == "back"
+                command_prompt
+                break
+            elsif new_username != @@user.username && !does_username_exist
+                print "***************\n".green.on_black
+                print @@user.update_username(new_username).green.on_black
+                print "\n***************".green.on_black
+                @@user = User.find(@@user.id)
+                stopper
+                break
+            else 
+                space
+                print "Enter valid name\n".red.on_black
+            end
         end
     end
 
@@ -378,11 +384,11 @@ class UserInterface
             already_saved = @@user.check_for_saved_repo(repo)
             if already_saved
                 space
-                print "#{repo.name} already saved!".green.on_black
+                print "#{repo.name} already saved\n!".green.on_black
             else
                 UserRepo.create(@@user, repo)
                 space
-                print "#{repo.name} saved!".green.on_black
+                print "#{repo.name} saved!\n".green.on_black
             end
         end
     end
