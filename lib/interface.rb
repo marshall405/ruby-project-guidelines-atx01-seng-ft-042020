@@ -91,6 +91,7 @@ class UserInterface
         
             end
             if username == 'back'
+                space(50)
                 login_or_create_account
                 break
             end
