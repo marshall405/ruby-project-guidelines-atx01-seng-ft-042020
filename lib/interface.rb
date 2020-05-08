@@ -182,7 +182,7 @@ class UserInterface
                 command_prompt
                 break
             else
-                print "Please enter a valid repo action.".red.on_black
+                print "Please enter a valid repo action.\n".red.on_black
                 
             end
         end
@@ -282,11 +282,11 @@ class UserInterface
                             user_delete_all_user_repos
                             break 
                         else
-                            repo = @@user.delete_repo(id.to_i - 1)
                             print "Are you sure? (y)".red.on_black
                             space(1)
                             input = get_user_input
                             if input.downcase == 'y'
+                                repo = @@user.delete_repo(id.to_i - 1)
                                 print "\n#{repo.name} has been deleted.\n".green.on_black
                                 repo_stopper
                             else
@@ -390,7 +390,9 @@ class UserInterface
 
     def self.user_save_repo
         space
-        print "Would you like to save a repo(y)?\n".green.on_black
+        print "
+               Would you like to save a repo(y)?\n
+               Everything not saved will be lost!".green.on_black
         space(1)
 
         input = get_user_input
