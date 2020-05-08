@@ -209,6 +209,7 @@ class UserInterface
     end
 
     def self.update_username
+        space
         puts "Current username: #{@@user.username}"
         puts "Enter new username or type 'back'"
         new_username = get_user_input
@@ -221,13 +222,12 @@ class UserInterface
             puts "*" * 10
             @@user = User.find(@@user.id)
             stopper
-            command_prompt
         else 
             space
             puts "!" * 10
             puts "Enter valid name"
             puts "!" * 10
-            stopper
+            
             self.update_username
         end
     end
@@ -277,9 +277,12 @@ class UserInterface
         if id.downcase == 'back'
             return false 
         else 
-            while id.to_i <= 0 || id.to_i > count do 
-                puts "Repo ID must be between 1 and #{count}"                
+            while id.to_i <= 0 || id.to_i > count do
+                puts "Enter Repo ID between 1 and #{count}, or type 'back'."                
                 id = get_user_input
+                if id.downcase == "back"
+                    return false
+                end
             end
             repo = Repo.searched_repos[id.to_i - 1]
             already_saved = @@user.check_for_saved_repo(repo)
@@ -311,7 +314,4 @@ end
 
 #1. Limit description word count to 200
 #2. Add to menu "Search user repo by keyword" using include
-#3. Add to menu "Delete user"
-
-#5. Look into TTY and other project requirements
-#6. Fix repo search > save > list > exit returns to command_prompt one extra time
+#3. Look into TTY and other project requirements

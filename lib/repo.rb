@@ -25,9 +25,10 @@ class Repo < ActiveRecord::Base
         @@temp_repos = []
         response = RestClient.get "https://api.github.com/search/repositories?q=#{key_term}&per_page=100"
         JSON.parse(response.body)["items"].each do |repo|
+            desc = repo["description"] ? repo["description"][0..800] + "..." : repo["description"]
             @@temp_repos << new(
                 name: repo["name"],
-                description: repo["description"],
+                description: desc,
                 url: repo["url"],
                 private: repo["private"],
                 owner_id: repo["owner"]["id"],
