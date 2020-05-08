@@ -311,7 +311,6 @@ class UserInterface
     
 
 end
-
-#1. Limit description word count to 200
-#2. Add to menu "Search user repo by keyword" using include
-#3. Look into TTY and other project requirements
+ 
+#1. Add to menu "Search user repo by keyword" using include
+#2. Look into TTY and other project requirements
