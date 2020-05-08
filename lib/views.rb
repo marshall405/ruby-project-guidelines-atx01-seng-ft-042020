@@ -72,14 +72,6 @@ module Views
         space
     end
 
-    def could_not_find_user_view(username)
-        space
-        print "
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-           Could not find user '#{username}'
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".green.on_black
-    end
-
     def command_prompt_view
         space(100)
         print "

@@ -13,7 +13,7 @@ class UserInterface
 
     def self.stopper
         space
-        print "Press return to go back to main menu.".green.on_black
+        print "Press return to see main menu.".green.on_black
 
         input = get_user_input
 
@@ -57,7 +57,7 @@ class UserInterface
             print "Enter a username: ".green.on_black
             username = get_user_input
             while username.empty?
-                print "Username cannont be empty: ".green.on_black
+                print "Username cannot be empty: ".green.on_black
                 username = get_user_input
             end
             user = User.find_by(username: username)
@@ -74,16 +74,22 @@ class UserInterface
 
     def self.login
         login_view 
-        print "Enter your username:".green.on_black
-        username = get_user_input
-        user = User.login(username)
-        if user 
-            @@user = user
-            welcome_user(user.username)
-            stopper
-        else
-            could_not_find_user_view(username)
-            login_or_create_account
+        loop do 
+            print "Enter your username:".green.on_black
+            username = get_user_input
+            while username.empty?
+                print "Username cannot be empty: ".red.on_black
+                username = get_user_input
+            end
+            user = User.login(username)
+            if user 
+                @@user = user
+                welcome_user(user.username)
+                stopper
+                break
+            else
+                print "Could not find username '#{username}'\n".red.on_black
+            end
         end
     end
 
