@@ -46,7 +46,7 @@ class UserInterface
                 exit_program
                 break
             else
-                print "Please enter valid action\n".green.on_black
+                print "Please enter valid action\n".red.on_black
             end
         end
     end
@@ -179,14 +179,18 @@ class UserInterface
     def self.search_repos
         print "Enter keyword to search: [ex: React], or type 'back'.".green.on_black
         keyword = get_user_input
+        while keyword.empty?
+            print "Cannot be empty.\n".red.on_black
+            print "Enter keyword to search: [ex: React], or type 'back'.".green.on_black
+            keyword = get_user_input
+        end
         if keyword == "back"
             command_prompt
-        elsif keyword != ""
+        else 
             space(40)
             Repo.search(keyword)
             user_save_repo
-        else
-            search_repos
+            repo_actions
         end
     end
 
@@ -339,37 +343,35 @@ class UserInterface
 
 
     def self.user_save_repo
-        space(1)
-        print "
-        *************************************
-          Would you like to save a repo(y)?
-          Everything not saved will be lost!
-        *************************************".green.on_black
+        space
+        print "Would you like to save a repo(y)?\n".green.on_black
         input = get_user_input
-        if input.downcase == 'y'
-            if save_repo
-                user_save_repo
-            else 
-                command_prompt
-            end
-        else
-            command_prompt
+        while input.downcase == 'y'
+            save_repo
+            print "Would you like to save a repo(y)?\n".green.on_black
+            input = get_user_input
         end
+        repo_actions
     end
 
     def self.save_repo
         space(1)
         print "Enter the Repo ID, or type 'back'".green.on_black
         id = get_user_input
+        while id.empty?
+            print "Must enter the Repo ID, or type 'back'".red.on_black
+            id = get_user_input
+        end 
+
         count = Repo.searched_repos.count 
         if id.downcase == 'back'
-            return false 
+            return
         else 
             while id.to_i <= 0 || id.to_i > count do
-                print "Enter Repo ID between 1 and #{count}, or type 'back'.".green.on_black
+                print "Repo ID must be between 1 and #{count}, or type 'back'.".red.on_black
                 id = get_user_input
                 if id.downcase == "back"
-                    return false
+                    return
                 end
             end
             repo = Repo.searched_repos[id.to_i - 1]
@@ -383,11 +385,11 @@ class UserInterface
                 print "#{repo.name} saved!".green.on_black
             end
         end
-        return true
     end
 
     def self.exit_program
         exit_program_view
+        exit 
     end
 
     private
