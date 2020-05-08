@@ -290,6 +290,7 @@ class UserInterface
                                 print "\n#{repo.name} has been deleted.\n".green.on_black
                                 repo_stopper
                             else
+                                print "No repos have been deleted.".green.on_black
                                 repo_stopper
                             end
                             break
