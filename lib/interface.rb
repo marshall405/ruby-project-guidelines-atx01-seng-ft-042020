@@ -105,25 +105,34 @@ class UserInterface
         when "3"
             exit_program
         else 
-            print "Please select a valid action".green.on_black
+            print "Please select a valid action".red.on_black
             command_prompt
         end
     end
 
     def self.edit_user
         user_view
-        print "What would you like to change about this user?".green.on_black
-        action = get_user_input
-        case action
-        when "1"
-            update_username
-        when "2"
-            user_delete_user
-        when "3"
-            command_prompt
-        else
-            print "Please select a valid action".green.on_black
-            edit_user
+        loop do 
+            print "What would you like to change about this user?".green.on_black
+            action = get_user_input
+            while action.empty?
+                print "Please select a valid action\n".red.on_black
+                print "What would you like to change about this user?".green.on_black
+                action = get_user_input
+            end
+            case action
+            when "1"
+                update_username
+                break
+            when "2"
+                user_delete_user
+                break
+            when "3"
+                command_prompt
+                break
+            else
+                print "Please select a valid action\n".red.on_black
+            end
         end
     end
 
@@ -275,7 +284,7 @@ class UserInterface
 
     def self.update_username
         space
-        print "Current username: #{@@user.username}".green.on_black
+        print "Current username: #{@@user.username}\n".green.on_black
         print "Enter new username or type 'back'".green.on_black
         new_username = get_user_input
         does_username_exist = User.find_by(username: new_username)
