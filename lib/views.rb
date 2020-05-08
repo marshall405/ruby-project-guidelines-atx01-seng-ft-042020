@@ -1,7 +1,10 @@
+require 'colorize'
+
 module Views
 
     def greeting
-        puts "
+        space(100)
+        print "
          .d8888b.           888    888    888          888      
         d88P  Y88b          888    888    888          888      
         888    888          888    888    888          888      
@@ -27,57 +30,59 @@ module Views
         888  88888 888 888         888    888 888  888 888  88b 
         888    888 888 888         888    888 888  888 888  888 
         Y88b  d88P 888 Y88b.       888    888 Y88b 888 888 d88P 
-          Y8888P88 888   Y888      888    888   Y88888 88008P  "
+          Y8888P88 888   Y888      888    888   Y88888 88008P  ".green.on_black
+
+          space(5)
+
     end
 
     def login_or_create_view
-        space
-        puts "
+        space(3)
+        print "
         *********************
         *   [ 1 ] Login     *
         *********************    
         *   [ 2 ] Create    *
         *********************
         *   [ 3 ] Exit      *
-        *********************"        
-        space(1)
+        *********************".green.on_black    
     end
 
     def login_view 
-        space(10)
-        puts "
+        space(100)
+        print "
         *********************
         *       LOGIN       *
-        *********************"
-        space(1)
+        *********************".green.on_black
+        space(3)
     end
 
     def create_view 
-        space(10)
-        puts "
+        space(100)
+        print "
         *********************
         *      CREATE       *
-        *********************"
-        space(1)
+        *********************".green.on_black
+        space(3)
     end
 
     def welcome_user(username)
-        space(10)
-        puts "     Hello, #{username}! "
+        space(100)
+        print "     Hello, #{username}! ".green.on_black
         space
     end
 
     def could_not_find_user_view(username)
         space
-        puts "
+        print "
         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
            Could not find user '#{username}'
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!".green.on_black
     end
 
     def command_prompt_view
-        space
-        puts "
+        space(100)
+        print "
         
 888b     d888          d8b               
 8888b   d8888          Y8P               
@@ -107,13 +112,13 @@ module Views
         *   [ 2 ] Edit User        *
         ****************************
         *   [ 3 ] Exit GetHub      *
-        ****************************"
-        space 
+        ****************************".green.on_black
+        space(3)
     end
 
     def user_view
-        space
-        puts "
+        space(100)
+        print "
 8888888888     888 d8b 888            
 888            888 Y8P 888            
 888            888     888            
@@ -142,13 +147,13 @@ Y88b. .d88P      X88 Y8b.     888
         *   [ 2 ] Delete User      *
         ****************************
         *   [ 3 ] Main Menu        *
-        ****************************"
-        space
+        ****************************".green.on_black
+        space(3)
     end
 
     def repo_view
-        space
-        puts "
+        space(100)
+        print "
 8888888b.                                                   
 888   Y88b                                                  
 888    888                                                  
@@ -181,12 +186,15 @@ d88P     888   Y8888P   Y888 888   Y88P   888  888  88888P
         *   [ 4 ] Delete My Repos  *
         ****************************
         *   [ 5 ] Main Menu        *
-        ****************************"
-        space
+        ****************************".green.on_black
+        space(3)
     end
 
     def exit_program_view
-        puts '
+        space(100)
+        print '
+
+
          .d8888b.                                  
         d88P  Y88b                                 
         888    888                                 
@@ -212,7 +220,9 @@ d88P     888   Y8888P   Y888 888   Y88P   888  888  88888P
             "Y88b. d88""88b d88""88b 888 "88b 888  
               "888 888  888 888  888 888  888 Y8P  
         Y88b  d88P Y88..88P Y88..88P 888  888  "   
-         "Y8888P"   "Y88P"   "Y88P"  888  888 888 '
+         "Y8888P"   "Y88P"   "Y88P"  888  888 888'.green.on_black
+
+         space(3)
     end
 
 

@@ -1,3 +1,5 @@
+require 'colorize'
+
 class UserInterface 
     # Interacts with user via command line
     @@user = nil
@@ -5,9 +7,13 @@ class UserInterface
     extend Views
     extend Commands 
 
+    def self.get_user_input
+        gets.strip.chomp
+    end
+
     def self.stopper
         space
-        puts "Press return to go back to main menu."
+        print "Press return to go back to main menu.".green.on_black
 
         input = get_user_input
 
@@ -25,7 +31,8 @@ class UserInterface
 
     def self.login_or_create_account
         login_or_create_view
-        puts "What would you like to do? [Enter number]"
+        space(3)
+        print "What would you like to do? [Enter number]: ".green.on_black
         action = get_user_input
         case action
         when "1"
@@ -35,21 +42,18 @@ class UserInterface
         when "3"
             exit_program
         else
-            "invalid input"
+            print "Please enter valid action".green.on_black
             login_or_create_account
         end
     end
 
-    def self.get_user_input
-        gets.strip.chomp
-    end
 
     def self.create_account(message=nil)
         if message
-            puts message
+            print message.green.on_black
         end
         create_view 
-        puts "Enter a username:"
+        print "Enter a username: ".green.on_black
         username = get_user_input
         self.create_account if username == ""
         user = User.find_by(username: username)
@@ -63,7 +67,7 @@ class UserInterface
 
     def self.login
         login_view 
-        puts "Enter your username:"
+        print "Enter your username:".green.on_black
         username = get_user_input
         user = User.login(username)
         if user 
@@ -78,7 +82,7 @@ class UserInterface
 
     def self.command_prompt
         command_prompt_view
-        puts "What action would you like to take?"
+        print "What action would you like to take?".green.on_black
         action = get_user_input
         case action
         when "1"
@@ -88,14 +92,14 @@ class UserInterface
         when "3"
             exit_program
         else 
-            puts "Please select a valid action"
+            print "Please select a valid action".green.on_black
             command_prompt
         end
     end
 
     def self.edit_user
         user_view
-        puts "What would you like to change about this user?"
+        print "What would you like to change about this user?".green.on_black
         action = get_user_input
         case action
         when "1"
@@ -105,21 +109,21 @@ class UserInterface
         when "3"
             command_prompt
         else
-            puts "Please select a valid action"
+            print "Please select a valid action".green.on_black
             edit_user
         end
     end
 
     def self.repo_stopper
         space(4)
-        puts "Press return to go back to Repo Action menu."
+        print "Press return to go back to Repo Action menu.".green.on_black
         get_user_input
         repo_actions
     end
 
     def self.repo_actions
         repo_view
-        puts "Please choose a repo action."
+        print "Please choose a repo action.".green.on_black
         action = get_user_input
         case action
         when "1"
@@ -134,14 +138,14 @@ class UserInterface
             command_prompt
         else
             space(4)
-            puts "Please enter a valid repo action."
+            print "Please enter a valid repo action.".green.on_black
             repo_stopper
         end
     end
 
 
     def self.search_repos
-        puts "Enter keyword to search: [ex: React], or type 'back'."
+        print "Enter keyword to search: [ex: React], or type 'back'.".green.on_black
         keyword = get_user_input
         if keyword == "back"
             command_prompt
@@ -160,7 +164,7 @@ class UserInterface
 
     def self.search_user_repos_by_keyword
         space
-        puts "Enter keyword to search: [ex: React], or type 'back'."
+        print "Enter keyword to search: [ex: React], or type 'back'.".green.on_black
         keyword = get_user_input
         if keyword == "back"
             repo_actions
@@ -168,15 +172,15 @@ class UserInterface
             saved = @@user.get_repos_by_keyword(keyword)
             if saved.empty?
                 space
-                puts "No Repos with that keyword"
+                print "No Repos with that keyword".green.on_black
             end
             space
-            puts "Press return to go back to Repo Action menu."
+            print "Press return to go back to Repo Action menu.".green.on_black
             get_user_input
             repo_actions
         else
             space(4)
-            puts "Invalid Input, going back to Repo Action menu"
+            print "Invalid Input, going back to Repo Action menu".green.on_black
             repo_stopper
         end
     end
@@ -187,7 +191,7 @@ class UserInterface
             @@user.display_repos_by_user
             space(1)
 
-            puts "Which Repo? Enter a Repo ID, type '***' to delete all repos or type 'back' to exit."
+            print "Which Repo? Enter a Repo ID, type '***' to delete all repos or type 'back' to exit.".green.on_black
             id = get_user_input
             
             if id == 'back'
@@ -199,7 +203,7 @@ class UserInterface
                 exit_loop = false
                 delete_all = false
                 while !@@user.valid_repo_id(id)
-                    puts "Enter a valid Repo ID, type '***' to delete all repos or type 'back' to exit."
+                    print "Enter a valid Repo ID, type '***' to delete all repos or type 'back' to exit.".green.on_black
                     id = get_user_input
                     case id 
                     when 'back'
@@ -218,61 +222,61 @@ class UserInterface
                 elsif exit_loop
                     command_prompt
                 else
-                    puts @@user.delete_repo(id.to_i - 1)
+                    print @@user.delete_repo(id.to_i - 1).green.on_black
                     stopper
                 end
             end
         else 
             space(3)
-            puts "No repos to delete!"
+            print "No repos to delete!".green.on_black
             stopper
         end 
     end
 
     def self.user_delete_single_user_repo(id)
         space(1)
-        puts "Are you sure? (y / n)"
+        print "Are you sure? (y / n)".green.on_black
         input = get_user_input
         space(1)
         if input.downcase == 'y'
             @@user.delete_repo(id.to_i - 1)
         elsif input.downcase == 'n'
-            puts "No repo deleted."
+            print "No repo deleted.".green.on_black
         end
     end
 
     def self.user_delete_all_user_repos
-        puts "Are you sure you want to delete ALL of your repos? (y)?"
+        print "Are you sure you want to delete ALL of your repos? (y)?".green.on_black
         input = get_user_input
         if input.downcase == 'y'
             @@user.delete_all_user_repos 
             space(1)
-            puts "All repos have been deleted."
+            print "All repos have been deleted.".green.on_black
         else
             space(1)
-            puts "No repos were deleted."
+            print "No repos were deleted.".green.on_black
         end
     end
 
     def self.update_username
         space
-        puts "Current username: #{@@user.username}"
-        puts "Enter new username or type 'back'"
+        print "Current username: #{@@user.username}".green.on_black
+        print "Enter new username or type 'back'".green.on_black
         new_username = get_user_input
         does_username_exist = User.find_by(username: new_username)
         if new_username == "back"
             command_prompt
         elsif new_username != "" && new_username != @@user.username && !does_username_exist
-            puts "*" * 10
-            puts @@user.update_username(new_username)
-            puts "*" * 10
+            print "*" * 10.green.on_black
+            print @@user.update_username(new_username).green.on_black
+            print "*" * 10.green.on_black
             @@user = User.find(@@user.id)
             stopper
         else 
             space
-            puts "!" * 10
-            puts "Enter valid name"
-            puts "!" * 10
+            print "!" * 10.green.on_black
+            print "Enter valid name".green.on_black
+            print "!" * 10.green.on_black
             
             self.update_username
         end
@@ -280,21 +284,21 @@ class UserInterface
 
     def self.user_delete_user
         space(5)
-        puts "Delete user: #{@@user.username}.\n\n\nAre you sure? (y / n)" 
+        print "Delete user: #{@@user.username}.\n\n\nAre you sure? (y / n)".green.on_black
         input = get_user_input
         while input != 'y' && input != 'n'
             space(4)
-            puts "Please enter a valid command."
+            print "Please enter a valid command.".green.on_black
             input = get_user_input
         end 
         if input.downcase == "y"
             space(4)
-            puts "Goodbye forever, #{@@user.username}.\n\n\nLogin to or create a different user.\n\n\nReturning to start menu."
+            print "Goodbye forever, #{@@user.username}.\n\n\nLogin to or create a different user.\n\n\nReturning to start menu.".green.on_black
             @@user.delete_user
             login_or_create_account
         else input.downcase == "n"
             space(4)
-            puts "No users deleted.\n\n\nReturning to edit user menu."
+            print "No users deleted.\n\n\nReturning to edit user menu.".green.on_black
             edit_user
         end
     end
@@ -302,11 +306,11 @@ class UserInterface
 
     def self.user_save_repo
         space(1)
-        puts "
+        print "
         *************************************
           Would you like to save a repo(y)?
           Everything not saved will be lost!
-        *************************************"
+        *************************************".green.on_black
         input = get_user_input
         if input.downcase == 'y'
             if save_repo
@@ -321,14 +325,14 @@ class UserInterface
 
     def self.save_repo
         space(1)
-        puts "Enter the Repo ID, or type 'back'"
+        print "Enter the Repo ID, or type 'back'".green.on_black
         id = get_user_input
         count = Repo.searched_repos.count 
         if id.downcase == 'back'
             return false 
         else 
             while id.to_i <= 0 || id.to_i > count do
-                puts "Enter Repo ID between 1 and #{count}, or type 'back'."                
+                print "Enter Repo ID between 1 and #{count}, or type 'back'.".green.on_black
                 id = get_user_input
                 if id.downcase == "back"
                     return false
@@ -338,11 +342,11 @@ class UserInterface
             already_saved = @@user.check_for_saved_repo(repo)
             if already_saved
                 space
-                puts "#{repo.name} already saved!"
+                print "#{repo.name} already saved!".green.on_black
             else
                 UserRepo.create(@@user, repo)
                 space
-                puts "#{repo.name} saved!"
+                print "#{repo.name} saved!".green.on_black
             end
         end
         return true
@@ -355,7 +359,7 @@ class UserInterface
     private
     def self.space(n=2)
         n.times do 
-            puts "\n"
+            print "\n".green.on_black
         end
     end
     
