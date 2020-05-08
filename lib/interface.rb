@@ -185,7 +185,7 @@ class UserInterface
             keyword = get_user_input
         end
         if keyword == "back"
-            command_prompt
+            repo_actions
         else 
             space(40)
             Repo.search(keyword)
