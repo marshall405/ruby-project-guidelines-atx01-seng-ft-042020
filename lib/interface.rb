@@ -91,10 +91,10 @@ class UserInterface
         
             end
             if username == 'back'
-                command_prompt
+                login_or_create_account
                 break
             end
-            
+
             user = User.login(username)
             if user 
                 @@user = user
