@@ -193,7 +193,7 @@ class UserInterface
     def self.list_user_repos
         space(40)
         @@user.display_repos_by_user
-        stopper
+        repo_stopper
     end
 
     def self.search_user_repos_by_keyword
