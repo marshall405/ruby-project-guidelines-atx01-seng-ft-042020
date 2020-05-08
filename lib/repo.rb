@@ -15,8 +15,10 @@ class Repo < ActiveRecord::Base
 
     def display(id: nil)
         id = id.nil? ? self.id : id 
+        Repo.space(1)
         print "
-        *************************************".green.on_black
+**********************************************************************************************************".green.on_black
+        Repo.space(1)
         Repo.space(1)
         print "Repo ID: #{id}".green.on_black
         Repo.space(1)

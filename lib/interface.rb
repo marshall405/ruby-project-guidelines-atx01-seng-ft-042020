@@ -150,6 +150,7 @@ class UserInterface
         if keyword == "back"
             command_prompt
         elsif keyword != ""
+            space(40)
             Repo.search(keyword)
             user_save_repo
         else
@@ -158,6 +159,7 @@ class UserInterface
     end
 
     def self.list_user_repos
+        space(40)
         @@user.display_repos_by_user
         stopper
     end
