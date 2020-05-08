@@ -70,7 +70,6 @@ class UserInterface
             @@user = user
             welcome_user(user.username)
             stopper
-            command_prompt
         else
             could_not_find_user_view(username)
             login_or_create_account
@@ -134,34 +133,51 @@ class UserInterface
         stopper
     end
 
-    def self.delete_user_repo(err: nil)
-        #add back function
+    def self.delete_user_repo
         if  @@user.user_repos_count > 0
             space(10)
             @@user.display_repos_by_user
             space(1)
-            if err 
-                puts err
-            end
-            puts "Which Repo? [Repo ID]\n\nType '***' to delete all user repos."
-            id = get_user_input
 
-            if id == "back"
+            puts "Which Repo? Enter a Repo ID, type '***' to delete all repos or type 'back' to exit."
+            id = get_user_input
+            
+            if id == 'back'
                 command_prompt
-            elsif id == "***"
+            elsif id == '***'
                 user_delete_all_user_repos
-                command_prompt
-            elsif @@user.valid_repo_id(id)
-                user_delete_single_user_repo(id)
-                command_prompt
-            else
-                delete_user_repo(err: "Enter a valid Repo ID")
+                stopper
+            else 
+                exit_loop = false
+                delete_all = false
+                while !@@user.valid_repo_id(id)
+                    puts "Enter a valid Repo ID, type '***' to delete all repos or type 'back' to exit."
+                    id = get_user_input
+                    case id 
+                    when 'back'
+                        exit_loop = true
+                        break
+                    when '***'
+                        delete_all = true
+                        break 
+                    end
+                end
+                space(1)
+                if delete_all
+                    user_delete_all_user_repos
+                   
+                    stopper
+                elsif exit_loop
+                    command_prompt
+                else
+                    puts @@user.delete_repo(id.to_i - 1)
+                    stopper
+                end
             end
         else 
             space(3)
             puts "No repos to delete!"
             stopper
-            command_prompt
         end 
     end
 
@@ -174,14 +190,22 @@ class UserInterface
             @@user.delete_repo(id.to_i - 1)
         elsif input.downcase == 'n'
             puts "No repo deleted."
-            stopper
         end
     end
 
     def self.user_delete_all_user_repos
         puts "Are you sure you want to delete ALL of your repos? (y)?"
         input = get_user_input
-        input.downcase == "y" ? @@user.delete_all_user_repos : delete_user_repo
+        if input.downcase == 'y'
+            @@user.delete_all_user_repos 
+            space(1)
+            puts "All repos have been deleted."
+        else
+            space(1)
+            puts "No repos were deleted."
+        end
+
+
     end
 
     def self.update_username
@@ -211,18 +235,17 @@ class UserInterface
     def self.user_delete_user
         puts "\n\n\n\n\nDelete user: #{@@user.username}.\n\n\nAre you sure? (y / n)" 
         input = get_user_input
+        while input != 'y' && input != 'n'
+            puts "\n\n\nPlease enter a valid command."
+            input = get_user_input
+        end 
         if input.downcase == "y"
             puts "\n\n\nGoodbye forever, #{@@user.username}.\n\n\nLogin to or create a different user.\n\n\nReturning to start menu."
             @@user.delete_user
             login_or_create_account
-        elsif input.downcase == "n"
+        else input.downcase == "n"
             puts "\n\n\nNo users deleted.\n\n\nReturning to edit user menu."
-            stopper
             edit_user
-        else
-            puts "\n\n\nPlease enter a valid command."
-            stopper
-            user_delete_user
         end
     end
 
@@ -231,25 +254,28 @@ class UserInterface
         space(1)
         puts "
         *************************************
-         Would you like to save a repo?[y,n]
+          Would you like to save a repo(y)?
+          Everything not saved will be lost!
         *************************************"
-
         input = get_user_input
-        if input.downcase == "y"
-            save_repo
-           
-            user_save_repo
-        else 
+        if input.downcase == 'y'
+            if save_repo
+                user_save_repo
+            else 
+                command_prompt
+            end
+        else
             command_prompt
         end
     end
 
     def self.save_repo
+        space(1)
         puts "Enter the Repo ID, or type 'back'"
         id = get_user_input
         count = Repo.searched_repos.count 
         if id.downcase == 'back'
-            return command_prompt
+            return false 
         else 
             while id.to_i <= 0 || id.to_i > count do 
                 puts "Repo ID must be between 1 and #{count}"                
@@ -266,6 +292,7 @@ class UserInterface
                 puts "#{repo.name} saved!"
             end
         end
+        return true
     end
 
     def self.exit_program
