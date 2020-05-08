@@ -51,21 +51,25 @@ class UserInterface
         end
     end
 
-    def self.create_account(message=nil)
-        if message
-            print message.green.on_black
-        end
+    def self.create_account
         create_view 
-        print "Enter a username: ".green.on_black
-        username = get_user_input
-        self.create_account if username == ""
-        user = User.find_by(username: username)
-        if user
-            create_account("#{username} is unavailable")
+        loop do 
+            print "Enter a username: ".green.on_black
+            username = get_user_input
+            while username.empty?
+                print "Username cannont be empty: ".green.on_black
+                username = get_user_input
+            end
+            user = User.find_by(username: username)
+            if !user 
+                @@user = User.create(username: username)
+                welcome_user(@@user.username)
+                command_prompt
+                break
+            else
+                print "#{username} is already taken!\n".red.on_black
+            end
         end
-        @@user = User.create(username: username)
-        welcome_user(@@user.username)
-        command_prompt
     end
 
     def self.login
