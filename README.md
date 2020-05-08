@@ -51,100 +51,38 @@ Projects need to be approved prior to launching into them, so take some time to 
 7. *OPTIONAL, BUT RECOMMENDED*: Write a blog post about the project and process.
 
 ---
-### Common Questions:
-- How do I turn off my SQL logger?
-```ruby
-# in config/environment.rb add this line:
-ActiveRecord::Base.logger = nil
-```
+         .d8888b.           888    888    888          888      
+        d88P  Y88b          888    888    888          888      
+        888    888          888    888    888          888      
+        888         .d88b.  888888 81tch88888 888  888 88888b.  
+        888  88888 d8P  Y8b 888    888    888 888  888 888  88b 
+        888    888 88888888 888    888    888 888  888 888  888 
+        Y88b  d88P Y8b.     Y88b.  888    888 Y88b 888 888 d88P 
+         Y8888P88   Y8888    Y888  888    888   Y88888 88008P 
+                                                                                                  
+                         .d888                                  
+                        d88P                                   
+                        888                                     
+                        888888 .d88b.  888d888.                  
+                        888   d88  88b 888P   8                  
+                        888   888  888 888                      
+                        888   Y88..88P 888                      
+                        888     Y88P   888                      
+                                                                                                     
+         .d8888b.  d8b 888         888    888          888      
+        d88P  Y88b Y8P 888         888    888          888      
+        888    888     888         888    888          888      
+        888        888 888888      81tch88888 888  888 88888b.  
+        888  88888 888 888         888    888 888  888 888  88b 
+        888    888 888 888         888    888 888  888 888  888 
+        Y88b  d88P 888 Y88b.       888    888 Y88b 888 888 d88P 
+          Y8888P88 888   Y888      888    888   Y88888 88008P
 
 
-* Github repo search
-* Search for github repos by key terms, save repos you like, view your saved repos, delete saved repos.
-* As a user, I want to search for repositorys using key search terms 
-* As a user, I want to save a repo
-* As a user, I want to view my saved repos 
-* As a user, I want to delete a repo
-* As a user, I want to update ????????????????
-
-* https://api.github.com/search/repositories?q=#{insert_search_term}
-
-* Database Structure
-  * Tables
-
-      users
-        username string
-        name string
-      
-      repos
-        name string
-        description string
-        url string
-        private boolean
-        owner_id integer
-        forks integer
-        stars integer
-
-      user_repos
-        user_id integer
-        repo_id integer
-
-* Models
-    User
-      instantiate with username and name, id=nil
-      #methods
-        save_repo(self.id, repo.id)
-            -UserRepo.save(self.id, repo.id)
-        display_repos
-            -UserRepo.get_user_repos(self.id)
-      .methods
-        find_user
-        create_user
-    
-    Repo
-
-      .methods
-        search(keyword)
-            -return response 
-        display_results
-            -display each repo 
-        save
-            -save repo 
-            -use temp array of searched repos 
 
 
-    UserRepo
-      .methods
-        all
-          -returns all user_repos
-          
-        save_repo(user_id, repo_id)
-          -user_id
-          -repo_id
+Hello, valued user, and welcome to GetHub for GitHub! This readme will give you a brief overview of the intended purpose of this program, as well as how to use it. To get started, be advised that this is a command line interface application, and must be launched from inside the CLI in order to work. You are most likely already comfortable with this process if you are reading this because you must be looking for a way to easily search for GitHub repositories, but if you are new to this, don't worry, we've got you covered. Read on for instructions.
 
-* Views
-    Command Line Interface
+First, let's explain what this app does, and why you need it. This app is designed to allow any number of users to search for GitHub repositories, save the information pertaining to them, including the url from which they can be forked, and save them so that any given user can later retrieve that stored information in case they want to fork and clone said repositories. The app keeps track of multiple users and gives them each their own stored list of repositories, meaning that even on a shared device, the lists will be stored discretely. This should save the user time, as one does not need to search the web, or clutter up bookmarks in a browser. Furthermore, one will not see just a repository name or url upon initial search or revisitation of one's collection, but many other helpful bits of information as well, such as the description of the repository, star rating, and existing number of forks. Why would you use this? Maybe you are interested in something that you don't have the time to explore right now, or perhaps there are several repositories that sound useful, but you would like to save them for comparison. In any case, our hope is that this app saves you time and consolidates your resources. Let's get started!
 
-    Ask user to login or create acct(login/create)
-      -If login
-        --Instantiate User class with data from users table
-      -If create
-        --Ask for username
-        --Ask for name
-        --Instantiate User.create with username and name
-    List of commands (What would you like to do?enter a number)
-      [1]-Search for repos
-        -Ask user for key term to use in search
-        -return a printed out list of repos matching the search terms
-        --To save a repo type "save"
-            ---ask user which repo [num] to save 
-            ---save and display message of success of failure
-            ---Go back to List of Commands
-      [2]-List of saved repos
-        --Print list of saved repos 
-        --Go back to List of Commands
-      [3]-Delete repo
-        --Ask user what repo [num] to delete
-        --get user input and pass to delete method
-        -- display message "repo deleted"
-        --Go back to List of Commands
+If you haven't already, you will first need to fork and clone this repository into your local Git so that you have all the files contained within. Once that is done, you can use your terminal to change to the directory and then type and return 'bundle' in your terminal in order to install the needed gems. Run the file with 'rake run', or 'ruby <filepath>'.
