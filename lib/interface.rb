@@ -7,7 +7,7 @@ class UserInterface
 
     def self.stopper
         space
-        puts "Any input will return to main menu."
+        puts "Press return to go back to main menu."
 
         input = get_user_input
 
@@ -82,14 +82,10 @@ class UserInterface
         action = get_user_input
         case action
         when "1"
-            search_repos
+            repo_actions
         when "2"
-            list_user_repos
-        when "3"
-            delete_user_repo
-        when "4"
             edit_user
-        when "5"
+        when "3"
             exit_program
         else 
             puts "Please select a valid action"
@@ -107,16 +103,45 @@ class UserInterface
         when "2"
             user_delete_user
         when "3"
-            self.command_prompt
+            command_prompt
         else
             puts "Please select a valid action"
             edit_user
         end
     end
 
+    def self.repo_stopper
+        space(4)
+        puts "Press return to go back to Repo Action menu."
+        get_user_input
+        repo_actions
+    end
+
+    def self.repo_actions
+        repo_view
+        puts "Please choose a repo action."
+        action = get_user_input
+        case action
+        when "1"
+            search_repos
+        when "2"
+            list_user_repos
+        when "3"
+            search_user_repos_by_keyword
+        when "4"
+            delete_user_repo
+        when "5"
+            command_prompt
+        else
+            space(4)
+            puts "Please enter a valid repo action."
+            repo_stopper
+        end
+    end
+
 
     def self.search_repos
-        puts "Enter keyword to search: [ex: React]"
+        puts "Enter keyword to search: [ex: React], or type 'back'."
         keyword = get_user_input
         if keyword == "back"
             command_prompt
@@ -124,13 +149,36 @@ class UserInterface
             Repo.search(keyword)
             user_save_repo
         else
-            self.search_repos
+            search_repos
         end
     end
 
     def self.list_user_repos
         @@user.display_repos_by_user
         stopper
+    end
+
+    def self.search_user_repos_by_keyword
+        space
+        puts "Enter keyword to search: [ex: React], or type 'back'."
+        keyword = get_user_input
+        if keyword == "back"
+            repo_actions
+        elsif keyword != ""
+            saved = @@user.get_repos_by_keyword(keyword)
+            if saved.empty?
+                space
+                puts "No Repos with that keyword"
+            end
+            space
+            puts "Press return to go back to Repo Action menu."
+            get_user_input
+            repo_actions
+        else
+            space(4)
+            puts "Invalid Input, going back to Repo Action menu"
+            repo_stopper
+        end
     end
 
     def self.delete_user_repo
@@ -204,8 +252,6 @@ class UserInterface
             space(1)
             puts "No repos were deleted."
         end
-
-
     end
 
     def self.update_username
@@ -233,18 +279,22 @@ class UserInterface
     end
 
     def self.user_delete_user
-        puts "\n\n\n\n\nDelete user: #{@@user.username}.\n\n\nAre you sure? (y / n)" 
+        space(5)
+        puts "Delete user: #{@@user.username}.\n\n\nAre you sure? (y / n)" 
         input = get_user_input
         while input != 'y' && input != 'n'
-            puts "\n\n\nPlease enter a valid command."
+            space(4)
+            puts "Please enter a valid command."
             input = get_user_input
         end 
         if input.downcase == "y"
-            puts "\n\n\nGoodbye forever, #{@@user.username}.\n\n\nLogin to or create a different user.\n\n\nReturning to start menu."
+            space(4)
+            puts "Goodbye forever, #{@@user.username}.\n\n\nLogin to or create a different user.\n\n\nReturning to start menu."
             @@user.delete_user
             login_or_create_account
         else input.downcase == "n"
-            puts "\n\n\nNo users deleted.\n\n\nReturning to edit user menu."
+            space(4)
+            puts "No users deleted.\n\n\nReturning to edit user menu."
             edit_user
         end
     end

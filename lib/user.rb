@@ -14,6 +14,11 @@ class User < ActiveRecord::Base
         User.find_by(username: username).repos 
     end
 
+    def get_repos_by_keyword(keyword)
+        owned = get_repos.select {|repo| repo.name.include?(keyword)}
+        owned.each {|repo| repo.display}
+    end
+
     def user_repos_count
         get_repos.count
     end
